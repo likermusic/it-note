@@ -54,7 +54,50 @@ function renderLoginPage() {
 
         });
     }
+
+
+    document.querySelector('.modal .form-register').addEventListener('submit', function () {
+        const name = document.querySelector('.form-register #modal-name').value;
+        const email = document.querySelector('.form-register #modal-email').value;
+        const password = document.querySelector('.form-register #modal-password').value;
+        registerUser(name, email, password);
+
+    })
 }
+
+function registerUser(name, email, password) {
+    // var users = []
+    // if (localStorage.getItem('users')) {
+    //     users = JSON.parse(localStorage.getItem('users'));
+    // }
+
+    var users = JSON.parse(localStorage.getItem('users')) || [];
+    if (users.length > 0) {
+        const isUserInLS = users.find(function (user) {
+            return user.email == email;
+        })
+
+        if (isUserInLS) {
+            document.querySelector('.modal .modal-body').insertAdjacentHTML('beforebegin', `
+        <div class="alert alert-warning" role="alert">
+         Пользователь с таким e-mail уже существует!
+        </div>
+        `)
+        } else {
+            const id = users[users.length - 1].id + 1;
+            const user = { id, email, password, name };
+            users.push(user);
+            localStorage.setItem('users', JSON.stringify(users));
+
+            // ПРОБЛЕМА - закрывается модальное окно при регистрации
+            //Уведомление об успешной регистрации
+        }
+
+
+    }
+
+}
+
 
 function loginPageMarkup() {
     return `
@@ -79,12 +122,45 @@ function loginPageMarkup() {
                     <input type="password" class="form-control" id="password" name="password" placeholder="Введите пароль">
                 </div>
                 <button type="submit" class="w-100 btn mb-3">Войти</button>
-                <button type="submit" class="w-100 btn">Зарегистрироваться</button>
+                <button onclick="return false;" class="w-100 btn" data-bs-toggle="modal" data-bs-target="#registerModal">Зарегистрироваться</button>
               </form>
         </div>
        </div>
     </div>
 </section>
+
+
+<!-- Modal -->
+<div class="modal fade" id="registerModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5">Регистрация пользователя</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form class="form-register mt-4 needs-validation" novalidate>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <i class="bi bi-person-circle"></i>  
+                    <input type="text" class="form-control" id="modal-name" name="name" placeholder="Введите имя">
+                </div>
+                <div class="mb-3">
+                    <i class="bi bi-envelope-at"></i>
+                    <input type="email" class="form-control" id="modal-email" name="email" placeholder="Введите почту">
+                </div>
+                <div class="mb-3">
+                    <i class="bi bi-lock-fill"></i>
+                    <input type="password" class="form-control" id="modal-password" name="password" placeholder="Введите пароль">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+                <button id="register" type="submit" class="w-100 btn mb-3">Зарегистрироваться</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
     `;
 }
 
@@ -96,3 +172,5 @@ function isAuth() {
         return false;
     }
 }
+
+

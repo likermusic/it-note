@@ -22,6 +22,7 @@ function renderTaskViewPage(task) {
 function showTask(task) {
   var card = `
             <a id="btn-back" href=""><i class="bi bi-arrow-90deg-left" data-toggle="tooltip" data-bs-title="Перейти к задачам"></i></a>
+            <a id="delete-task" href=""><i class="bi bi-x-lg"></i></a>
             <div data-id="${task.id}" class="task-card card mx-auto" style="width: 21rem;">
                   <div class="image-edit input-group mb-3">
                     <img  src="img/${task.image}" class="task-image card-img-top">
@@ -33,7 +34,7 @@ function showTask(task) {
                     <textarea class="task-desc card-text form-control mb-2" placeholder="Введите описание задачи">${task.description}</textarea>
                     <a id="task-save" href="#" class="d-block py-2 btn btn-violet">Сохранить</a>
                   </div>
-              </div>
+            </div>
       `;
 
   document.querySelector('.task-view .container').insertAdjacentHTML('beforeend', card);
@@ -68,9 +69,21 @@ function showTask(task) {
         </div>
         `);
   })
+
+  document.querySelector('#delete-task')?.addEventListener('click', function (e) {
+    e.preventDefault();
+    if (confirm('Вы действительно хотите удалить задачу?')) {
+      const id = document.querySelector('.task-card').dataset.id;
+      var arr = JSON.parse(localStorage.getItem('tasks'));
+      var newArr = arr.filter(function (task) {
+        return task.id != id;
+      })
+      localStorage.setItem('tasks', JSON.stringify(newArr));
+      document.body.innerHTML = '';
+      renderTasksPage();
+    }
+  })
 }
-
-
 
 
 

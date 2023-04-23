@@ -58,8 +58,20 @@ body {
     transition: 0.1s;
     display: inline-block;
 }
-
-#btn-back:hover > i {
+.task-view .container {
+    position: relative;
+}
+#delete-task {
+    position: absolute;
+    right: 20px;
+    top:20px;
+}
+#delete-task > i {
+    font-size: 25px;
+    display: inline-block;
+    transition: 0.1s;
+}
+#btn-back:hover > i,  #delete-task:hover > i{
     /* text-shadow: 0 0 10px gray; */
     transform: scale(0.6);
 }
@@ -138,4 +150,32 @@ body {
 
 .tasks .container {
     border-radius: 0 0 5px 5px;
+}
+
+
+.form-register>.modal-body>div {
+    position: relative;
+}
+.form-register>div input {
+    padding-left: 34px;
+    border-radius: 18px;
+}
+.form-register>div i {
+    position: absolute;
+    left:14px;
+    top: 7px;
+    color: #999;
+}
+
+.form-register button {
+    border-radius: 18px;
+    border: 1px solid #999;
+}
+
+.form-register button:nth-of-type(1) {
+    background-image: linear-gradient(to right, #6148c8, #be5bfb);
+    color: #fff;
+}
+.form-register button:nth-of-type(1):hover {
+    color: #bbb;
 }

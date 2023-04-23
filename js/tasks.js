@@ -15,15 +15,23 @@ function renderTasksPage() {
       <ul id="tasks-wrapper" class="list-group list-group-flush">
 
       </ul>
+      <hr>
+      <button id="clear-all" class="btn btn-danger text-center">Удалить все задачи</button>
   </div>
 </section>
   `;
-
-  document.body.insertAdjacentHTML('afterbegin',tasksPage);  
-
+  document.body.insertAdjacentHTML('afterbegin', tasksPage);
 
 
-  document.querySelector('#task-form').addEventListener('submit', function(event) {
+  document.querySelector('#clear-all').addEventListener('click', function () {
+    if (confirm('Вы действительно хотите удалить все задачи?')) {
+      localStorage.removeItem('tasks');
+      document.body.innerHTML = '';
+      renderTasksPage();
+    }
+  })
+
+  document.querySelector('#task-form').addEventListener('submit', function (event) {
     event.preventDefault();
     if (document.querySelector('#task-data').value !== '') {
       // Сохранить в LS
@@ -33,8 +41,8 @@ function renderTasksPage() {
       alert('Введено пусто значение');
     }
   });
-  
-  
+
+
   // document.addEventListener('DOMContentLoaded',function() {
   //1. ПОлучить все задачи из LS
   // var tasks = [
@@ -50,22 +58,22 @@ function renderTasksPage() {
       renderTask(item);
     }
   }
- 
 
-// })
 
-document.querySelector('#tasks-wrapper').addEventListener('click', function(event) {
-  if (event.target.classList.contains('arrow-btn')) {
-    const id = event.target.parentElement.dataset.id;
-    // const taskTitle = event.target.parentElement.querySelector('.task-title').textContent;
-    const tasks = JSON.parse(localStorage.getItem('tasks'));
-    const task = tasks.find(function(item) {
-      return item.id == id;
-    })
-    renderTaskViewPage(task);
-  }  
-});
-// document.querySelector('#tasks-wrapper').addEventListener('click', showTask);
+  // })
+
+  document.querySelector('#tasks-wrapper').addEventListener('click', function (event) {
+    if (event.target.classList.contains('arrow-btn')) {
+      const id = event.target.parentElement.dataset.id;
+      // const taskTitle = event.target.parentElement.querySelector('.task-title').textContent;
+      const tasks = JSON.parse(localStorage.getItem('tasks'));
+      const task = tasks.find(function (item) {
+        return item.id == id;
+      })
+      renderTaskViewPage(task);
+    }
+  });
+  // document.querySelector('#tasks-wrapper').addEventListener('click', showTask);
 
 
 
@@ -73,7 +81,7 @@ document.querySelector('#tasks-wrapper').addEventListener('click', function(even
 
 
 function renderTask(task) {
-// 2. Отрендерить задачи
+  // 2. Отрендерить задачи
   const ul = document.querySelector('#tasks-wrapper');
 
   const li = `
@@ -82,12 +90,12 @@ function renderTask(task) {
     <i class="arrow-btn bi bi-chevron-right"></i>
   </li>
 `
-  ul.insertAdjacentHTML('beforeend',li);
+  ul.insertAdjacentHTML('beforeend', li);
 }
 
 function addTask(form) {
   const title = form.children[0].value;
-  var task = {name:title, description:'', image: 'no-image.png'};
+  var task = { name: title, description: '', image: 'no-image.png' };
   // СОхранить в LS
   // var tasks = [];
   // if (localStorage.getItem('tasks')) {
@@ -97,8 +105,8 @@ function addTask(form) {
   // localStorage.setItem('tasks', JSON.stringify(tasks));
 
   var tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-  if (tasks.length > 0)  {
-    task.id = tasks[tasks.length-1].id + 1; 
+  if (tasks.length > 0) {
+    task.id = tasks[tasks.length - 1].id + 1;
   } else {
     task.id = 1;
   }
@@ -108,9 +116,9 @@ function addTask(form) {
 
   //ПОлучили из LS массив tasks
   // Отрендерить задачу из LS на экран с пом Ф renderTask (передаем задчку)
- 
+
   renderTask(task);
-  
+
 }
 
 
