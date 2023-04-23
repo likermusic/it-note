@@ -1,8 +1,8 @@
 // const users = [
-//     {id:1, email:'user1@mail.ru', password:'123'},
-//     {id:2, email:'user2@mail.ru', password:'321'},
+//     { id: 1, email: 'user1@mail.ru', password: '123' },
+//     { id: 2, email: 'user2@mail.ru', password: '321' },
 // ];
-// localStorage.setItem('users', JSON.stringify(users) );
+// localStorage.setItem('users', JSON.stringify(users));
 
 
 function renderLoginPage() {
@@ -12,19 +12,19 @@ function renderLoginPage() {
         renderTasksPage();
     } else {
         const loginPage = loginPageMarkup();
-        document.body.insertAdjacentHTML('afterbegin', loginPage);  
-        document.querySelector('.form-login')?.addEventListener('submit', function(e) {
+        document.body.insertAdjacentHTML('afterbegin', loginPage);
+        document.querySelector('.form-login')?.addEventListener('submit', function (e) {
             e.preventDefault();
             var email = document.querySelector('#email').value;
-            var password = document.querySelector('#password').value;  
-            
+            var password = document.querySelector('#password').value;
+
             if (localStorage.getItem('users')) {
-                const users = JSON.parse(localStorage.getItem('users'));  
+                const users = JSON.parse(localStorage.getItem('users'));
                 // [{"id":1,"email":"d@m.ry","password":"123321Ru"}]
                 // console.log(users);
 
                 //Проверить если не пуст LS
-                var user = users.find(function(item) {
+                var user = users.find(function (item) {
                     // if (email == item.email && password == item.password) {
                     //     return item;
                     // }
@@ -33,7 +33,7 @@ function renderLoginPage() {
 
                 if (!user) {
                     document.querySelector('.login-error')?.remove();
-                    document.querySelector('.login .container').insertAdjacentHTML('afterbegin',`
+                    document.querySelector('.login .container').insertAdjacentHTML('afterbegin', `
                     <div class="login-error alert alert-danger" role="alert">
                         Неверный логин или пароль!
                     </div>
@@ -45,19 +45,19 @@ function renderLoginPage() {
                 }
             } else {
                 document.querySelector('.login-error')?.remove();
-                document.querySelector('.login .container').insertAdjacentHTML('afterbegin',`
+                document.querySelector('.login .container').insertAdjacentHTML('afterbegin', `
                 <div class="login-error alert alert-danger" role="alert">
                     Пользователь с такими данными не зарегистрирован!
                 </div>
                 `)
             }
-            
-        } );
+
+        });
     }
 }
 
 function loginPageMarkup() {
-    return  `
+    return `
     <section class="login">
     <div class="container">
         <div class="row text-center">
@@ -91,7 +91,7 @@ function loginPageMarkup() {
 
 function isAuth() {
     if (localStorage.getItem('authUser')) {
-       return true;
+        return true;
     } else {
         return false;
     }
