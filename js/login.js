@@ -13,6 +13,25 @@ function renderLoginPage() {
     } else {
         const loginPage = loginPageMarkup();
         document.body.insertAdjacentHTML('afterbegin', loginPage);
+
+        document.querySelector('.modal .form-register').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const form = e.target;
+            if (!form.checkValidity()) {
+                e.stopPropagation();
+                form.classList.add('was-validated');
+                return;
+            }
+            const name = document.querySelector('.form-register #modal-name').value;
+            const email = document.querySelector('.form-register #modal-email').value;
+            const password = document.querySelector('.form-register #modal-password').value;
+            if (registerUser(name, email, password)) {
+                alert('Вы успешно зарегистрированы!');
+                document.body.innerHTML = '';
+                renderTasksPage();
+            }
+        })
+
         document.querySelector('.form-login')?.addEventListener('submit', function (e) {
             e.preventDefault();
             var email = document.querySelector('#email').value;
@@ -45,24 +64,16 @@ function renderLoginPage() {
                 }
             } else {
                 document.querySelector('.login-error')?.remove();
-                document.querySelector('.login .container').insertAdjacentHTML('afterbegin', `
+                document.querySelector('.login .container').innerHTML = `
                 <div class="login-error alert alert-danger" role="alert">
                     Пользователь с такими данными не зарегистрирован!
                 </div>
-                `)
+                `;
             }
 
         });
     }
 
-
-    document.querySelector('.modal .form-register').addEventListener('submit', function () {
-        const name = document.querySelector('.form-register #modal-name').value;
-        const email = document.querySelector('.form-register #modal-email').value;
-        const password = document.querySelector('.form-register #modal-password').value;
-        registerUser(name, email, password);
-
-    })
 }
 
 function registerUser(name, email, password) {
@@ -78,16 +89,21 @@ function registerUser(name, email, password) {
         })
 
         if (isUserInLS) {
+            document.querySelector('.form-register .alert-warning')?.remove();
             document.querySelector('.modal .modal-body').insertAdjacentHTML('beforebegin', `
         <div class="alert alert-warning" role="alert">
          Пользователь с таким e-mail уже существует!
         </div>
         `)
+            return false;
         } else {
             const id = users[users.length - 1].id + 1;
             const user = { id, email, password, name };
             users.push(user);
             localStorage.setItem('users', JSON.stringify(users));
+            localStorage.setItem('authUser', id);
+            return true;
+
 
             // ПРОБЛЕМА - закрывается модальное окно при регистрации
             //Уведомление об успешной регистрации
@@ -122,6 +138,7 @@ function loginPageMarkup() {
                     <input type="password" class="form-control" id="password" name="password" placeholder="Введите пароль">
                 </div>
                 <button type="submit" class="w-100 btn mb-3">Войти</button>
+                <!-- <button onclick="return false;" class="w-100 btn" data-bs-toggle="modal" data-bs-target="#registerModal">Зарегистрироваться</button> -->
                 <button onclick="return false;" class="w-100 btn" data-bs-toggle="modal" data-bs-target="#registerModal">Зарегистрироваться</button>
               </form>
         </div>
@@ -142,20 +159,20 @@ function loginPageMarkup() {
             <div class="modal-body">
                 <div class="mb-3">
                     <i class="bi bi-person-circle"></i>  
-                    <input type="text" class="form-control" id="modal-name" name="name" placeholder="Введите имя">
+                    <input type="text" class="form-control" id="modal-name" name="name" placeholder="Введите имя" required> 
                 </div>
                 <div class="mb-3">
                     <i class="bi bi-envelope-at"></i>
-                    <input type="email" class="form-control" id="modal-email" name="email" placeholder="Введите почту">
+                    <input type="email" class="form-control" id="modal-email" name="email" placeholder="Введите почту" required>
                 </div>
                 <div class="mb-3">
                     <i class="bi bi-lock-fill"></i>
-                    <input type="password" class="form-control" id="modal-password" name="password" placeholder="Введите пароль">
+                    <input type="password" class="form-control" id="modal-password" name="password" placeholder="Введите пароль" required>
                 </div>
             </div>
             <div class="modal-footer">
                 <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
-                <button id="register" type="submit" class="w-100 btn mb-3">Зарегистрироваться</button>
+                <button id="register" class="w-100 btn mb-3">Зарегистрироваться</button>
             </div>
             </form>
         </div>
@@ -172,5 +189,7 @@ function isAuth() {
         return false;
     }
 }
+
+
 
 
